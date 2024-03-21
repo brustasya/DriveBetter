@@ -2,7 +2,6 @@ package com.matttax.drivebetter.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-val Purple200 = Color(0xFFBB86FC)
-val Purple500 = Color(0xFF6200EE)
-val Purple700 = Color(0xFF3700B3)
-val Teal200 = Color(0xFF03DAC5)
+val TinkoffYellow = Color(0xFFFCDC2C)
+val TinkoffYellowDark = Color(0x35FCDC2C)
+val TinkoffBlue = Color(0xFF76ABFB)

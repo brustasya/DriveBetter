@@ -10,5 +10,4 @@ data class UserRideInfo(
 data class UserRideBatch(
     val uuid: String,
     val ridePoints: List<RidePoint>
-
 )

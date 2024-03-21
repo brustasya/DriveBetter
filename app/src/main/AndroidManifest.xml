@@ -4,6 +4,12 @@
     package="com.matttax.drivebetter">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
     <application
         android:allowBackup="true"
@@ -17,6 +23,11 @@
         android:name=".DriveBetterApp"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
+        <service
+            android:name=".speedometer.background.DriveService"
+            android:enabled="true"
+            android:foregroundServiceType="location"
+            android:stopWithTask="false" />
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -24,7 +35,6 @@
             android:theme="@style/Theme.DriveBetter">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

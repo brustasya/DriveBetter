@@ -28,7 +28,7 @@ class NetworkModule {
     @Provides
     fun provideRetrofit(client: OkHttpClient): Retrofit {
         return Retrofit.Builder()
-            .baseUrl(BASE_URL)
+            .baseUrl(ApiService.BASE_URL)
             .client(client)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
@@ -42,9 +42,5 @@ class NetworkModule {
     @Provides
     fun provideApiHelper(apiService: ApiService): ApiHelperImpl {
         return ApiHelperImpl(apiService)
-    }
-
-    companion object {
-        const val BASE_URL = "http://34.155.177.3:8000/"
     }
 }

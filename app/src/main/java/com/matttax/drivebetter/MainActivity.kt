@@ -1,160 +1,133 @@
 package com.matttax.drivebetter
 
-import android.Manifest
+import android.content.ComponentName
+import android.content.Context
 import android.content.Intent
+import android.content.ServiceConnection
 import android.os.Bundle
+import android.os.IBinder
+import android.os.Messenger
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Text
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import androidx.core.app.ActivityCompat
-import com.matttax.drivebetter.drive.DriveViewModel
-import com.matttax.drivebetter.location.LocationService
-import com.matttax.drivebetter.network.model.Address
+import androidx.compose.ui.layout.onPlaced
+import androidx.compose.ui.platform.LocalDensity
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.navigation
+import androidx.navigation.compose.rememberNavController
+import com.matttax.drivebetter.drive.presentation.DriveViewModel
+import com.matttax.drivebetter.drive.presentation.DrivingCommand
+import com.matttax.drivebetter.drive.presentation.componenets.RideScreen
+import com.matttax.drivebetter.history.HistoryScreen
+import com.matttax.drivebetter.history.RidesHistoryViewModel
+import com.matttax.drivebetter.profile.presentation.components.ProfileScreen
+import com.matttax.drivebetter.profile.presentation.ProfileViewModel
+import com.matttax.drivebetter.speedometer.background.DriveService
+import com.matttax.drivebetter.speedometer.background.communication.ActivityMessenger
+import com.matttax.drivebetter.speedometer.model.DashboardData
+import com.matttax.drivebetter.ui.navigation.BottomNavigationBar
+import com.matttax.drivebetter.ui.navigation.NavigationItems
 import com.matttax.drivebetter.ui.theme.DriveBetterTheme
-import com.matttax.drivebetter.ui.theme.Purple700
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class MainActivity : ComponentActivity() {
+class MainActivity : ComponentActivity(), ServiceConnection {
+
+    private val driveViewModel by viewModels<DriveViewModel>()
+    private val activityMessenger = ActivityMessenger(::onStatusUpdate)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val viewModel by viewModels<DriveViewModel>()
-        ActivityCompat.requestPermissions(
-            this,
-            arrayOf(
-                Manifest.permission.ACCESS_COARSE_LOCATION,
-                Manifest.permission.ACCESS_FINE_LOCATION,
-            ),
-            0
-        )
+        startService(Intent(this, DriveService::class.java))
+        lifecycleScope.launch {
+            driveViewModel.drivingCommand.collectLatest {
+                when (it) {
+                    DrivingCommand.START -> activityMessenger.startDrive()
+                    DrivingCommand.PAUSE -> activityMessenger.pauseDrive()
+                    DrivingCommand.STOP -> activityMessenger.stopDrive()
+                }
+            }
+        }
         setContent {
             DriveBetterTheme {
-                RideScreen(
-                    speedFlow = flow {
-                        emit(2.7)
-                        delay(1800)
-                        emit(1.1)
-                        delay(900)
-                        emit(1.3)
-                        delay(900)
-                        emit(0.9)
-                        delay(2700)
-                        emit(1.1)
-                    },
-                    isRidingFlow = flow { emit(true) },
-                    addressFlow = viewModel.location,
-                    onStateChange = {
-                        Intent(applicationContext, LocationService::class.java).apply {
-                            startService(this)
+                val navController = rememberNavController()
+                var barYPosition by remember { mutableStateOf(0) }
+                Scaffold(
+                    modifier = Modifier.fillMaxSize(),
+                    bottomBar = {
+                        BottomNavigationBar(
+                            modifier = Modifier.onPlaced { barYPosition = it.size.height },
+                            navController = navController
+                        )
+                    }
+                ) {
+                    NavHost(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(bottom = with(LocalDensity.current) { barYPosition.toDp() }),
+                        navController = navController,
+                        startDestination = NavigationItems.DASHBOARD.route
+                    ) {
+                        composable(NavigationItems.RIDES.route) {
+                            val historyViewModel by viewModels<RidesHistoryViewModel>()
+                            HistoryScreen(historyViewModel)
+                        }
+                        composable(NavigationItems.DASHBOARD.route) {
+                            RideScreen(driveViewModel)
+                        }
+                        composable(NavigationItems.PROFILE.route) {
+                            val profileViewModel by viewModels<ProfileViewModel>()
+                            ProfileScreen(profileViewModel)
+                        }
+                        navigation(
+                            startDestination = "calendar_overview",
+                            route = "calendar"
+                        ) {
+                            composable("calendar_overview") {
+
+                            }
+                            composable("calendar_entry") {
+
+                            }
                         }
                     }
-                )
+                }
             }
         }
     }
-}
 
-@Composable
-fun RideScreen(
-    speedFlow: Flow<Double>,
-    isRidingFlow: Flow<Boolean>,
-    addressFlow: Flow<Address?>,
-    onStateChange: (Boolean) -> Unit
-) {
-    val speed by speedFlow.collectAsState(0.0)
-    val address by addressFlow.collectAsState(null)
-    val isRiding by isRidingFlow.collectAsState(false)
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(
-            modifier = Modifier.padding(top = 20.dp),
-            text = address?.short.toString(),
-            fontSize = 18.sp,
-            color = Purple700
-        )
-        Box(
-            modifier = Modifier.fillMaxSize(0.6f),
-            contentAlignment = Alignment.Center
-        ) {
-            SpeedView(speed = speed, title = "Current", size = 44)
-        }
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceEvenly,
-        ) {
-            SpeedView(speed = 1.4, title = "Average", size = 36)
-            Spacer(modifier = Modifier.width(25.dp))
-            SpeedView(speed = 5.3, title = "Max", size = 36)
-        }
-        Spacer(modifier = Modifier.weight(1f))
-        Button(
-            modifier = Modifier.fillMaxWidth(0.8f),
-            shape = RoundedCornerShape(15.dp),
-            onClick = { onStateChange(!isRiding) },
-            colors = ButtonDefaults.textButtonColors(Utils.getButtonColor(isRiding))
-        ) {
-            Text(
-                text = Utils.getButtonText(isRiding),
-                color = Color.White
-            )
-        }
+    override fun onServiceDisconnected(name: ComponentName?) {
+        activityMessenger.onDisconnect()
     }
-}
 
-@Composable
-fun SpeedView(speed: Double, title: String, size: Int) {
-    Column(
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(
-            text = title,
-            fontSize = (size / 2).sp,
-            color = Color.Gray
-        )
-        Text(
-            text = "$speed",
-            fontSize = size.sp
-        )
-        Text(
-            text = "km/h",
-            fontSize = (size / 2).sp,
-            color = Color.Gray
+    override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
+        activityMessenger.onConnect(Messenger(service))
+        activityMessenger.handShake()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        bindService(
+            Intent(this, DriveService::class.java),
+            this,
+            Context.BIND_AUTO_CREATE
         )
     }
-}
 
-object Utils {
-
-    fun getButtonColor(isRiding: Boolean): Color {
-        return if (isRiding) Color(0xFFD21404) else Color.Blue
+    override fun onStop() {
+        super.onStop()
+        unbindService(this)
     }
 
-    fun getButtonTextColor(isRiding: Boolean): Color {
-        return if (isRiding) Color.Red else Color.Blue
+    private fun onStatusUpdate(dashboardData: DashboardData) {
+        driveViewModel.updateDashboardData(dashboardData)
     }
-
-    fun getButtonText(isRiding: Boolean): String {
-        return if (isRiding) "Finish ride" else "Start ride"
-    }
-
 }

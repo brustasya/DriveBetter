@@ -1,28 +1,42 @@
 package com.matttax.drivebetter.ui.theme
 
-import androidx.compose.material.Typography
+import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
+import com.matttax.drivebetter.R
 
-// Set of Material typography styles to start with
+val tinkoffRegular = FontFamily(
+    Font(R.font.tinkoff_sans_regular)
+)
+
+val tinkoffMedium = FontFamily(
+    Font(R.font.tinkoff_sans_medium)
+)
+
+val tinkoffBold = FontFamily(
+    Font(R.font.tinkoff_sans_bold)
+)
+
 val Typography = Typography(
-    body1 = TextStyle(
-        fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.Normal,
-        fontSize = 16.sp
-    )
-    /* Other default text styles to override
-    button = TextStyle(
-        fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.W500,
-        fontSize = 14.sp
+    titleLarge = TextStyle(
+        fontFamily = tinkoffBold,
+        fontSize = 28.sp,
     ),
-    caption = TextStyle(
-        fontFamily = FontFamily.Default,
+    titleMedium = TextStyle(
+        fontFamily = tinkoffBold,
+        fontSize = 18.sp,
+    ),
+    titleSmall = TextStyle(
+        fontFamily = tinkoffRegular,
+        fontWeight = FontWeight.Thin,
+        fontSize = 14.sp,
+    ),
+    bodyMedium = TextStyle(
+        fontFamily = tinkoffMedium,
         fontWeight = FontWeight.Normal,
-        fontSize = 12.sp
-    )
-    */
+        fontSize = 16.sp,
+    ),
 )
