@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct WeatherModel {
+struct WeatherModel: Hashable {
     let date: Date
     let visibility: Double
     let weaterType: WeatherType

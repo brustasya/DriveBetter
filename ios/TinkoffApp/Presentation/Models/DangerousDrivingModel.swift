@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct DangerousDrivingModel {
+struct DangerousDrivingModel: Hashable {
     let date: Date
     let acceleration: Double
     let address: String

@@ -18,7 +18,6 @@ class DashboardViewController: UIViewController {
     private lazy var maxSpeedLabelKmH = UILabel()
     private lazy var averageSpeedLabel = UILabel()
     private lazy var averageSpeedLabelKmH = UILabel()
-  //  private lazy var adressLabel = UILabel()
     private lazy var averageLabel = UILabel()
     private lazy var maxLabel = UILabel()
     private lazy var currentLabel = UILabel()
@@ -40,33 +39,9 @@ class DashboardViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = UIColor.systemGray6 //UIColor(rgb: "#fae253")
+        view.backgroundColor = UIColor.systemGray6
         setupView()
         output.viewIsReady()
-        
-//        setupSpeedTitleLabel(adressLabel)
-//        NSLayoutConstraint.activate([
-//            adressLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-//            adressLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20)
-//        ])
-//        
-//        motionManager.startActivityUpdates(to: .main, withHandler: { [weak self] activity in
-//            if let activity {
-//                if activity.automotive {
-//                    self?.adressLabel.text = "automotive"
-//                } else if activity.cycling {
-//                    self?.adressLabel.text = "cycling"
-//                } else if activity.running {
-//                    self?.adressLabel.text = "running"
-//                } else if activity.stationary {
-//                    self?.adressLabel.text = "stationary"
-//                } else if activity.walking {
-//                    self?.adressLabel.text = "walking"
-//                } else if activity.unknown {
-//                    self?.adressLabel.text = "unknown"
-//                }
-//            }
-//        })
     }
     
     private func setupView() {
@@ -76,7 +51,6 @@ class DashboardViewController: UIViewController {
         setupCurrentSpeed()
         setupAverageSpeed()
         setupMaxSpeed()
-        //setupStartStopRideButton()
     }
     
     private func setupTitle() {
@@ -157,7 +131,7 @@ class DashboardViewController: UIViewController {
         currentSpeedBackgroundView.backgroundColor = .white
         currentSpeedBackgroundView.translatesAutoresizingMaskIntoConstraints = false
         currentSpeedBackgroundView.layer.cornerRadius = 155
-        currentSpeedBackgroundView.layer.borderColor =  UIColor(rgb: "#fcdc2c")?.cgColor
+        currentSpeedBackgroundView.layer.borderColor =  Colors.yellow.uiColor.cgColor
         currentSpeedBackgroundView.layer.borderWidth = 10
         
         NSLayoutConstraint.activate([
@@ -171,11 +145,9 @@ class DashboardViewController: UIViewController {
     
     private func setupAverageSpeedBackgroundView() {
         view.addSubview(averageSpeedBackgroundView)
-        averageSpeedBackgroundView.backgroundColor = .white //UIColor(rgb: "#fcdc2c") //UIColor(rgb: "#fae253")
+        averageSpeedBackgroundView.backgroundColor = .white
         averageSpeedBackgroundView.translatesAutoresizingMaskIntoConstraints = false
         averageSpeedBackgroundView.layer.cornerRadius = 85
-        //averageSpeedBackgroundView.layer.borderColor = #colorLiteral(red: 0.1298420429, green: 0.1298461258, blue: 0.1298439503, alpha: 1)// UIColor(rgb: "#fcdc2c")?.cgColor
-        //averageSpeedBackgroundView.layer.borderWidth = 3
         
         NSLayoutConstraint.activate([
             averageSpeedBackgroundView.heightAnchor.constraint(equalToConstant: 170),
@@ -189,11 +161,9 @@ class DashboardViewController: UIViewController {
     
     private func setupMaxSpeedBackgroundView() {
         view.addSubview(maxSpeedBackgroundView)
-        maxSpeedBackgroundView.backgroundColor = .white//UIColor(rgb: "#fcdc2c")
+        maxSpeedBackgroundView.backgroundColor = .white
         maxSpeedBackgroundView.translatesAutoresizingMaskIntoConstraints = false
         maxSpeedBackgroundView.layer.cornerRadius = 85
-        //maxSpeedBackgroundView.layer.borderColor = #colorLiteral(red: 0.1298420429, green: 0.1298461258, blue: 0.1298439503, alpha: 1)
-        //maxSpeedBackgroundView.layer.borderWidth = 3
         
         NSLayoutConstraint.activate([
             maxSpeedBackgroundView.heightAnchor.constraint(equalToConstant: 170),
@@ -211,7 +181,7 @@ class DashboardViewController: UIViewController {
         startStopRideButton.setTitle("Начать поездку", for: .normal)
         startStopRideButton.setTitleColor(.black, for: .normal)
         startStopRideButton.titleLabel?.font = UIFont.systemFont(ofSize: 17, weight: .semibold)
-        startStopRideButton.backgroundColor = UIColor(rgb: "#fcdc2c")
+        startStopRideButton.backgroundColor = Colors.yellow.uiColor
         startStopRideButton.layer.cornerRadius = 14
         
         NSLayoutConstraint.activate([

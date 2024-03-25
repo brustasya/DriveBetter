@@ -9,4 +9,6 @@ import Foundation
 
 protocol PassengerTripViewOutput: AnyObject {
     func closeButtonTapped()
+    func viewIsReady()
+    func changeRoleButtonTapped()
 }

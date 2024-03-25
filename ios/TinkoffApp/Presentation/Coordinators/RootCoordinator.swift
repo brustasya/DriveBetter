@@ -63,12 +63,12 @@ final class RootCoordinator {
     }
     
     private func openTrip(with model: TripModel) {
-        tripViewController = tripAssembly.makeTripModule(moduleOutput: self)
+        tripViewController = tripAssembly.makeTripModule(moduleOutput: self, model: model)
         mainScreenNavigationController.present(tripViewController, animated: true)
     }
     
     private func openPassengerTrip(with model: TripModel) {
-        passengerTripViewController = passengerTripAssembly.makePassengerTripModule(moduleOutput: self)
+        passengerTripViewController = passengerTripAssembly.makePassengerTripModule(moduleOutput: self, model: model)
         passengerTripViewController.modalPresentationStyle = .custom
 
         passengerTripViewController.transitioningDelegate = passengerTripViewController.self as? any UIViewControllerTransitioningDelegate

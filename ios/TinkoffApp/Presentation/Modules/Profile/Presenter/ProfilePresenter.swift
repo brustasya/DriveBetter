@@ -8,8 +8,6 @@
 import Foundation
 import Combine
 
-// возраст, номер прав, пол
-
 final class ProfilePresenter {
     weak var viewInput: ProfileViewInput?
     weak var moduleOutput: ProfileModuleOutput?
@@ -33,7 +31,10 @@ final class ProfilePresenter {
                 let profileModel = UserProfileViewModel(
                     userName: userProfile?.userName,
                     userDescription: userProfile?.userDescription,
-                    userAvatar: userProfile?.userAvatar
+                    userAvatar: userProfile?.userAvatar,
+                    age: userProfile?.age,
+                    licenceNumber: userProfile?.licenceNumber,
+                    sex: userProfile?.sex
                 )
                 
                 self?.viewInput?.updateProfile(with: profileModel)
@@ -50,7 +51,15 @@ extension ProfilePresenter: ProfileViewOutput {
     
     func addPhotoButtonTapped(with delegate: ProfileSaveDelegate?) {
         moduleOutput?.moduleWantsToOpenProfileEditing(
-            with: profileModel ?? UserProfileViewModel(userName: "", userDescription: "", userAvatar: nil),
+            with: profileModel ?? UserProfileViewModel(
+                userName: nil,
+                userDescription: nil,
+                userAvatar: nil,
+                age: nil,
+                licenceNumber: nil,
+                sex: nil
+                
+            ),
             isPhotoAdded: false,
             delegate: delegate
         )
@@ -58,7 +67,15 @@ extension ProfilePresenter: ProfileViewOutput {
     
     func editButtonTapped(with delegate: ProfileSaveDelegate?) {
         moduleOutput?.moduleWantsToOpenProfileEditing(
-            with: profileModel ?? UserProfileViewModel(userName: "", userDescription: "", userAvatar: nil),
+            with: profileModel ?? UserProfileViewModel(
+                userName: nil,
+                userDescription: nil,
+                userAvatar: nil,
+                age: nil,
+                licenceNumber: nil,
+                sex: nil
+                
+            ),
             isPhotoAdded: true,
             delegate: delegate
         )

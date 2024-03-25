@@ -51,10 +51,8 @@ class TripCell: UITableViewCell, ConfigurableViewProtocol {
         passengerView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-          //  leftStarView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
             leftStarView.centerYAnchor.constraint(equalTo: ratingLabel.centerYAnchor),
             
-         //   ratingLabel.leadingAnchor.constraint(equalTo: leftStarView.trailingAnchor, constant: 5),
             ratingLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
             ratingLabel.widthAnchor.constraint(equalToConstant: 35),
             
@@ -62,10 +60,8 @@ class TripCell: UITableViewCell, ConfigurableViewProtocol {
             rightStarView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
             
             dateLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 16),
-           // dateLabel.leadingAnchor.constraint(equalTo: rightStarView.trailingAnchor, constant: 25),
             
             cityLabel.topAnchor.constraint(equalTo: dateLabel.bottomAnchor, constant: 5),
-         //   cityLabel.leadingAnchor.constraint(equalTo: rightStarView.trailingAnchor, constant: 25),
             
             passengerView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
             passengerView.centerXAnchor.constraint(equalTo: ratingView.centerXAnchor),
@@ -74,7 +70,6 @@ class TripCell: UITableViewCell, ConfigurableViewProtocol {
             
             ratingView.heightAnchor.constraint(equalToConstant: 50),
             ratingView.widthAnchor.constraint(equalToConstant: 50),
-           // ratingView.centerXAnchor.constraint(equalTo: ratingLabel.centerXAnchor),
             ratingView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
             
             dateLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
@@ -87,7 +82,7 @@ class TripCell: UITableViewCell, ConfigurableViewProtocol {
         ratingView.layer.cornerRadius = 25
         ratingView.backgroundColor = .clear
         ratingView.layer.borderWidth = 4
-        ratingView.layer.borderColor = UIColor(rgb: "#fcdc2c")?.cgColor
+        ratingView.layer.borderColor = Colors.yellow.uiColor.cgColor
         
         ratingLabel.font = UIFont.systemFont(ofSize: 22, weight: .bold)
         ratingLabel.textColor = .black

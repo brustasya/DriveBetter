@@ -54,7 +54,7 @@ class RatingCell: UITableViewCell, ConfigurableViewProtocol {
             modelView.widthAnchor.constraint(equalToConstant: 30)
         ])
         
-        speedLabel.textColor = UIColor(rgb: "#fcdc2c")
+        speedLabel.textColor = Colors.yellow.uiColor
         speedLabel.textAlignment = .center
         speedLabel.font = UIFont.systemFont(ofSize: 32, weight: .heavy)
         
@@ -76,13 +76,13 @@ class RatingCell: UITableViewCell, ConfigurableViewProtocol {
         
         switch model.place {
         case 1:
-            modelView.tintColor = UIColor(rgb: "#ffd900")
+            modelView.tintColor = Colors.gold.uiColor
             modelView.isHidden = false
         case 2:
-            modelView.tintColor = UIColor(rgb: "#808080")
+            modelView.tintColor = Colors.silver.uiColor
             modelView.isHidden = false
         case 3:
-            modelView.tintColor = UIColor(rgb: "#cd7f32")
+            modelView.tintColor = Colors.brown.uiColor
             modelView.isHidden = false
         default:
             modelView.isHidden = true

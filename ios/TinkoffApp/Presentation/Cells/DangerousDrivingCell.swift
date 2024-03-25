@@ -74,11 +74,11 @@ class DangerousDrivingCell: UITableViewCell, ConfigurableViewProtocol {
         
         if model.acceleration > 0 {
             accelerationLabel.text = "Резкое ускорение"
-            accelerationView.tintColor = UIColor(rgb: "#FF4040")
+            accelerationView.tintColor = Colors.red.uiColor
             accelerationView.image = UIImage(systemName: "chevron.forward.2")
         } else {
             accelerationLabel.text = "Резкое торможение"
-            accelerationView.tintColor = UIColor(rgb: "#3E97D1")
+            accelerationView.tintColor = Colors.lightBlue.uiColor
             accelerationView.image = UIImage(systemName: "chevron.backward.2")
         }
     }

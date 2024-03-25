@@ -8,5 +8,5 @@
 import Foundation
 
 protocol RatingViewInput: AnyObject {
-    
+    func applySnapshot(with models: [RatingModel])
 }

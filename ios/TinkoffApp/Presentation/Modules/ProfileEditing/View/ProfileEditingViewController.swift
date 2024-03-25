@@ -300,7 +300,6 @@ class ProfileEditingViewController: UIViewController {
         addPhotoButton.titleLabel?.font = UIFont.systemFont(ofSize: 17)
         
         NSLayoutConstraint.activate([
-            //addPhotoButton.widthAnchor.constraint(equalToConstant: 81),
             addPhotoButton.heightAnchor.constraint(equalToConstant: 22),
             addPhotoButton.topAnchor.constraint(equalTo: editProfileImageView.bottomAnchor, constant: 24),
             addPhotoButton.centerXAnchor.constraint(equalTo: view.centerXAnchor)
@@ -315,9 +314,12 @@ class ProfileEditingViewController: UIViewController {
     
     @objc internal func saveProfileDataButtonTaped() {
         let userProfileModel = UserProfileViewModel(
-            userName: nameTextField.text == "" ? "Нет имени" : nameTextField.text,
-            userDescription: cityTextField.text == "" ? "-" : cityTextField.text,
-            userAvatar: editProfileImageView.image?.pngData()
+            userName: nameTextField.text == "" ? nil : nameTextField.text,
+            userDescription: cityTextField.text == "" ? nil : cityTextField.text,
+            userAvatar: editProfileImageView.image?.pngData(),
+            age: ageTextField.text == "" ? nil : ageTextField.text,
+            licenceNumber: licenseNumberTextField.text == "" ? nil : licenseNumberTextField.text,
+            sex: sexTextField.text == "" ? nil : sexTextField.text
         )
         output.saveButtonTapped(profileModel: userProfileModel)
     }

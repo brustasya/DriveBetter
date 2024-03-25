@@ -19,6 +19,12 @@ class TripViewController: UIViewController {
     private lazy var ratingLabel = UILabel()
     private lazy var ratingBackgroundView = UIView()
     
+    private lazy var maxSpeedLabel = UILabel()
+    private lazy var averageSpeedLabel = UILabel()
+    
+    private lazy var nighttimeLabel = UILabel()
+    private lazy var lightnighttimeLabel = UILabel()
+    
     private lazy var overSpeedTitle = UILabel()
     private lazy var overSpeedBackgroundView = UIView()
     
@@ -33,31 +39,19 @@ class TripViewController: UIViewController {
     
     private lazy var dangerousDrivingView = UIView()
     private lazy var dangerousDrivingLabel = UILabel()
-    private lazy var dangerousDrivingTableView = UITableView()
     
     private lazy var changeRoleButton = UIButton()
 
     private lazy var dateCityLabel = UILabel()
     
     private lazy var overSpeedTableView = UITableView()
-    let data: [SpeedModel] = [
-        SpeedModel(speed: 45, timestamp: Date(), address: "ул. Вавилова, д. 46"),
-        SpeedModel(speed: 62, timestamp: Calendar.current.date(byAdding: .hour, value: 3, to: Date.now) ?? Date(), address: "ул. Большая Полянка, д. 1/3"),
-        SpeedModel(speed: 120, timestamp: Calendar.current.date(byAdding: .hour, value: 5, to: Date.now) ?? Date(), address: "ул. Бутлерова, д. 4"),
-    ]
+    private lazy var overSdeeds: [SpeedModel] = []
     
     private lazy var weatherTableView = UITableView()
-    let weather: [WeatherModel] = [
-        WeatherModel(date: Date(), visibility: 100, weaterType: .fog),
-  //      WeatherModel(date: Calendar.current.date(byAdding: .hour, value: 1, to: Date.now) ?? Date(), visibility: 1000, weaterType: .sun),
-        WeatherModel(date: Calendar.current.date(byAdding: .hour, value: 3, to: Date.now) ?? Date(), visibility: 300, weaterType: .rain)
-    ]
+    private lazy var weather: [WeatherModel] = []
     
-    let dangerousDriving: [DangerousDrivingModel] = [
-        DangerousDrivingModel(date: Date(), acceleration: 20, address: "ул. Вавилова, д. 46"),
-        DangerousDrivingModel(date: Calendar.current.date(byAdding: .hour, value: 1, to: Date.now) ?? Date(), acceleration: -20, address: "ул. Бутлерова, д. 4"),
-        DangerousDrivingModel(date: Calendar.current.date(byAdding: .hour, value: 4, to: Date.now) ?? Date(), acceleration: 20, address: "ул. Большая Полянка, д. 1/3"),
-    ]
+    private lazy var dangerousDrivingTableView = UITableView()
+    private lazy var dangerousDriving: [DangerousDrivingModel] = []
 
     init(output: TripViewOutput) {
         self.output = output
@@ -72,7 +66,13 @@ class TripViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .systemGray6
         
+        output.viewIsReady()
         setupView()
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        setupScrollView()
     }
     
     private func setupView() {
@@ -89,7 +89,18 @@ class TripViewController: UIViewController {
         setupDangerousDriving()
         setupChangeRoleButton()
         
-      //  overSpeedBackgroundView.heightAnchor.constraint(equalToConstant: 0).isActive = true
+        if weather.count == 0 {
+            weatherBackgroundView.heightAnchor.constraint(equalToConstant: 0).isActive = true
+            weatherBackgroundView.topAnchor.constraint(equalTo: timeBackgroundView.bottomAnchor, constant: 1).isActive = true
+        }
+        if overSdeeds.count == 0 {
+            overSpeedBackgroundView.heightAnchor.constraint(equalToConstant: 0).isActive = true
+            overSpeedBackgroundView.topAnchor.constraint(equalTo: weatherBackgroundView.bottomAnchor, constant: 1).isActive = true
+        }
+        if dangerousDriving.count == 0 {
+            dangerousDrivingView.heightAnchor.constraint(equalToConstant: 0).isActive = true
+            dangerousDrivingView.topAnchor.constraint(equalTo: weatherBackgroundView.bottomAnchor).isActive = true
+        }
     }
     
     private func setupDateCityLabel() {
@@ -98,11 +109,6 @@ class TripViewController: UIViewController {
         dateCityLabel.textColor = .black
         dateCityLabel.font = UIFont.systemFont(ofSize: 20, weight: .semibold)
         
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "dd MMMM yyyy"
-        let date = dateFormatter.string(from: Date.now)
-        dateCityLabel.text = "\(date) г."
-        
         NSLayoutConstraint.activate([
             dateCityLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             dateCityLabel.topAnchor.constraint(equalTo: ratingLabel.bottomAnchor, constant: 10)
@@ -110,7 +116,6 @@ class TripViewController: UIViewController {
     }
     
     private func setupScrollView() {
-        view.addSubview(scrollView)
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
@@ -120,7 +125,9 @@ class TripViewController: UIViewController {
             scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
         
-        scrollView.contentSize = CGSize(width: scrollView.frame.width, height: 1500)
+        let height = changeRoleButton.frame.maxY + 40
+        
+        scrollView.contentSize = CGSize(width: scrollView.frame.width, height: height)
         scrollView.isScrollEnabled = true
     }
     
@@ -135,8 +142,6 @@ class TripViewController: UIViewController {
         
         let maxSpeedView = UIView()
         let averageSpeedView = UIView()
-        let maxSpeedLabel = UILabel()
-        let averageSpeedLabel = UILabel()
         let maxSpeedTitleLabel = UILabel()
         let averageSpeedTitleLabel = UILabel()
 
@@ -158,9 +163,6 @@ class TripViewController: UIViewController {
 
         maxSpeedTitleLabel.text = "Макс."
         averageSpeedTitleLabel.text = "Средняя"
-
-        maxSpeedLabel.text = "120"
-        averageSpeedLabel.text = "60"
     }
     
     private func createSpeedView(speedView: UIView, speedLabel: UILabel, titleLabel: UILabel) {
@@ -172,7 +174,7 @@ class TripViewController: UIViewController {
         speedView.backgroundColor = .white
         speedView.layer.cornerRadius = 30
         speedView.layer.borderWidth = 5
-        speedView.layer.borderColor = UIColor(rgb: "#fcdc2c")?.cgColor
+        speedView.layer.borderColor = Colors.yellow.uiColor.cgColor
         speedLabel.textColor = .black
         speedLabel.font = .systemFont(ofSize: 20, weight: .bold)
         speedLabel.sizeToFit()
@@ -198,32 +200,27 @@ class TripViewController: UIViewController {
             timeBackgroundView.topAnchor.constraint(equalTo: speedBackgroundView.bottomAnchor, constant: 20)
         ])
         
-        let maxSpeedLabel = UILabel()
-        let averageSpeedLabel = UILabel()
-        let maxSpeedTitleLabel = UILabel()
-        let averageSpeedTitleLabel = UILabel()
+        let nighttimeTitleLabel = UILabel()
+        let lightnighttimeTitleLabel = UILabel()
         
-        timeBackgroundView.addSubview(maxSpeedLabel)
-        timeBackgroundView.addSubview(averageSpeedLabel)
-        timeBackgroundView.addSubview(maxSpeedTitleLabel)
-        timeBackgroundView.addSubview(averageSpeedTitleLabel)
+        timeBackgroundView.addSubview(nighttimeLabel)
+        timeBackgroundView.addSubview(lightnighttimeLabel)
+        timeBackgroundView.addSubview(nighttimeTitleLabel)
+        timeBackgroundView.addSubview(lightnighttimeTitleLabel)
         
-        createTimeView(timeLabel: maxSpeedLabel, titleLabel: maxSpeedTitleLabel)
-        createTimeView(timeLabel: averageSpeedLabel, titleLabel: averageSpeedTitleLabel)
+        createTimeView(timeLabel: nighttimeLabel, titleLabel: nighttimeTitleLabel)
+        createTimeView(timeLabel: lightnighttimeLabel, titleLabel: lightnighttimeTitleLabel)
         
         NSLayoutConstraint.activate([
-            maxSpeedTitleLabel.leadingAnchor.constraint(equalTo: timeBackgroundView.leadingAnchor, constant: 30),
-            maxSpeedTitleLabel.topAnchor.constraint(equalTo: timeTitleLabel.bottomAnchor, constant: 30),
-            averageSpeedTitleLabel.leadingAnchor.constraint(equalTo: timeBackgroundView.centerXAnchor, constant: 0),
-            averageSpeedTitleLabel.topAnchor.constraint(equalTo: timeTitleLabel.bottomAnchor, constant: 30),
-            timeBackgroundView.bottomAnchor.constraint(equalTo: maxSpeedLabel.bottomAnchor, constant: 20)
+            nighttimeTitleLabel.leadingAnchor.constraint(equalTo: timeBackgroundView.leadingAnchor, constant: 30),
+            nighttimeTitleLabel.topAnchor.constraint(equalTo: timeTitleLabel.bottomAnchor, constant: 30),
+            lightnighttimeTitleLabel.leadingAnchor.constraint(equalTo: timeBackgroundView.centerXAnchor, constant: 0),
+            lightnighttimeTitleLabel.topAnchor.constraint(equalTo: timeTitleLabel.bottomAnchor, constant: 30),
+            timeBackgroundView.bottomAnchor.constraint(equalTo: nighttimeLabel.bottomAnchor, constant: 20)
         ])
         
-        maxSpeedTitleLabel.text = "Ночь"
-        averageSpeedTitleLabel.text = "Сумерки"
-        
-        maxSpeedLabel.text = "20%"
-        averageSpeedLabel.text = "80%"
+        nighttimeTitleLabel.text = "Ночь"
+        lightnighttimeTitleLabel.text = "Сумерки"
     }
     
     private func createTimeView(timeLabel: UILabel, titleLabel: UILabel) {
@@ -262,7 +259,7 @@ class TripViewController: UIViewController {
         createBackgroundView(backgroundView: overSpeedBackgroundView, titleLabel: overSpeedTitle, tableView: overSpeedTableView)
                 
         NSLayoutConstraint.activate([
-            overSpeedTableView.heightAnchor.constraint(equalToConstant: CGFloat(Double(data.count * 70) - 0.5))
+            overSpeedTableView.heightAnchor.constraint(equalToConstant: CGFloat(Double(overSdeeds.count * 70) - 0.5))
         ])
         
         overSpeedTitle.text = "Превышения скорости"
@@ -369,7 +366,6 @@ class TripViewController: UIViewController {
         
         ratingLabel.font = UIFont.systemFont(ofSize: 40, weight: .heavy)
         ratingLabel.textColor = .black
-        ratingLabel.text = "5.1"
         
         ratingBackgroundView.backgroundColor = .white
         ratingBackgroundView.layer.borderColor = UIColor(rgb: "#fcdc2c")?.cgColor
@@ -389,7 +385,7 @@ class TripViewController: UIViewController {
         scrollView.addSubview(starView)
         starView.translatesAutoresizingMaskIntoConstraints = false
         starView.image = UIImage(systemName: "star.fill")
-        starView.tintColor = UIColor(rgb: "#fcdc2c")
+        starView.tintColor = Colors.yellow.uiColor
         
         NSLayoutConstraint.activate([
             starView.heightAnchor.constraint(equalToConstant: 30),
@@ -403,7 +399,7 @@ class TripViewController: UIViewController {
         changeRoleButton.setTitle("Сменить роль", for: .normal)
         changeRoleButton.setTitleColor(.black, for: .normal)
         changeRoleButton.titleLabel?.font = UIFont.systemFont(ofSize: 17, weight: .semibold)
-        changeRoleButton.backgroundColor = UIColor(rgb: "#fcdc2c")
+        changeRoleButton.backgroundColor = Colors.yellow.uiColor
         changeRoleButton.layer.cornerRadius = 10
         
         NSLayoutConstraint.activate([
@@ -422,18 +418,50 @@ class TripViewController: UIViewController {
     }
     
     @objc private func changeRoleButtonTapped() {
+        showAlert()
+    }
+    
+    private func showAlert() {
+        let alertController = UIAlertController(title: "Смена роли", message: "Хотите сменить роль на Пассажир?", preferredStyle: .alert)
         
+        let okAction = UIAlertAction(title: "Сменить", style: .default) { [weak self] (_) in
+            self?.output.changeRoleButtonTapped()
+            self?.output.closeButtonTapped()
+        }
+        
+        let cancelAction = UIAlertAction(title: "Отмена", style: .default) { _ in }
+            
+        
+        alertController.addAction(okAction)
+        alertController.addAction(cancelAction)
+        
+        present(alertController, animated: true, completion: nil)
     }
 }
 
 extension TripViewController: TripViewInput {
-    
+    func setupTrip(model: TripModel) {
+        ratingLabel.text = "\(model.rating)"
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "dd MMMM yyyy"
+        let date = dateFormatter.string(from: model.date)
+        dateCityLabel.text = "\(date) г."
+        
+        maxSpeedLabel.text = "\(model.maxSpeed)"
+        averageSpeedLabel.text = "\(model.averageSpeed)"
+        nighttimeLabel.text = "\(model.nightTime)%"
+        lightnighttimeLabel.text = "\(model.lightNightTime)%"
+        overSdeeds = model.overSdeeds
+        weather = model.weather
+        dangerousDriving = model.accelerations
+    }
 }
 
 extension TripViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if tableView == overSpeedTableView {
-            return data.count
+            return overSdeeds.count
         } else if tableView == weatherTableView {
             return weather.count
         } else {
@@ -446,7 +474,7 @@ extension TripViewController: UITableViewDataSource, UITableViewDelegate {
             guard let cell = tableView.dequeueReusableCell(withIdentifier: "SpeedCell", for: indexPath) as? SpeedCell else {
                 fatalError("Cannot create SpeedCell")
             }
-            cell.configure(with: data[indexPath.row])
+            cell.configure(with: overSdeeds[indexPath.row])
             cell.selectionStyle = .none
             return cell
         } else if tableView == weatherTableView {

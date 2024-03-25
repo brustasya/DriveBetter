@@ -54,13 +54,12 @@ class SpeedCell: UITableViewCell, ConfigurableViewProtocol {
             ratingView.widthAnchor.constraint(equalToConstant: 50),
             ratingView.centerXAnchor.constraint(equalTo: speedLabel.centerXAnchor),
             ratingView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-            //ratingView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20)
         ])
         
         ratingView.layer.cornerRadius = 25
         ratingView.backgroundColor = .clear
         ratingView.layer.borderWidth = 4
-        ratingView.layer.borderColor = UIColor(rgb: "#FF4040")?.cgColor //UIColor.red.cgColor//UIColor(rgb: "#fcdc2c")?.cgColor
+        ratingView.layer.borderColor = Colors.red.uiColor.cgColor
         
         speedLabel.textColor = .black
         speedLabel.textAlignment = .center

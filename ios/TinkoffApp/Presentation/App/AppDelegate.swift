@@ -10,13 +10,8 @@ import UIKit
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
-   // let telemetryManager = TelemetryManager()
-
-
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
-//        telemetryManager.requestLocationPermission()
-//        telemetryManager.startTracking()
         return true
     }
 

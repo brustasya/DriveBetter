@@ -8,5 +8,6 @@
 import Foundation
 
 protocol MainScreenViewInput: AnyObject {
-    
+    func applySnapshot(tripModels: [TripModel])
+    func stopRefreshing() 
 }

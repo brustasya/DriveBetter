@@ -20,13 +20,7 @@ class MainScreenViewController: UIViewController {
     
     private lazy var tableView = UITableView(frame: view.bounds, style: .insetGrouped)
     private lazy var dataSource = makeDataSource()
-    
-    let speedLabel: UILabel = {
-        let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 40)
-        label.textAlignment = .center
-        return label
-    }()
+    private lazy var refreshControl = UIRefreshControl()
     
     init(output: MainScreenViewOutput) {
         self.output = output
@@ -42,6 +36,11 @@ class MainScreenViewController: UIViewController {
         view.backgroundColor = .white
         
         setupView()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        output.viewWillAppear()
     }
     
     private func setupView() {
@@ -68,23 +67,12 @@ class MainScreenViewController: UIViewController {
 
         tableView.register(TripCell.self, forCellReuseIdentifier: "TripCell")
         
-        var snapshot = NSDiffableDataSourceSnapshot<TripsSection, TripModel>()
-        snapshot.appendSections([.drivers, .passengers])
-        snapshot.appendItems([
-            TripModel(date: Date.now, city: "Москва", rating: 7.7, isDriver: true),
-            TripModel(date: Date.now, city: "Москва", rating: 9.9, isDriver: true),
-            TripModel(date: Date.now, city: "Москва", rating: 1.2, isDriver: true),
-            TripModel(date: Date.now, city: "Москва", rating: 5.1, isDriver: true)
-        ], toSection: .drivers)
-        snapshot.appendItems([
-            TripModel(date: Date.now, city: "Москва", rating: 7.7, isDriver: false),
-            TripModel(date: Date.now, city: "Москва", rating: 9.9, isDriver: false),
-        ], toSection: .passengers)
-        dataSource.apply(snapshot, animatingDifferences: false)
-        
-        UILabel.appearance(whenContainedInInstancesOf: [
-                    UITableViewHeaderFooterView.self
-        ]).textColor = .black
+        tableView.addSubview(refreshControl)
+        refreshControl.addTarget(self, action: #selector(refreshData), for: .valueChanged)
+    }
+    
+    @objc func refreshData() {
+        output.viewWillAppear()
     }
     
     private func makeDataSource() -> DataSource {
@@ -102,9 +90,22 @@ class MainScreenViewController: UIViewController {
 final class DataSource: UITableViewDiffableDataSource<TripsSection, TripModel> { }
 
 extension MainScreenViewController: MainScreenViewInput {
+    func applySnapshot(tripModels: [TripModel]) {
+        var snapshot = NSDiffableDataSourceSnapshot<TripsSection, TripModel>()
+        snapshot.appendSections([.drivers, .passengers])
+        snapshot.appendItems(
+            tripModels.filter { $0.isDriver },
+            toSection: .drivers)
+        snapshot.appendItems(
+            tripModels.filter { !$0.isDriver },
+            toSection: .passengers)
+        dataSource.apply(snapshot, animatingDifferences: false)
+    }
     
+    func stopRefreshing() {
+        refreshControl.endRefreshing()
+    }
 }
-
 
 extension MainScreenViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

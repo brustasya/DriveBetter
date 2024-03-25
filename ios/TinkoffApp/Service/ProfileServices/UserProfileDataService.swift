@@ -51,9 +51,13 @@ extension UserProfileDataService: UserProfileDataServiceProtocol {
     
     func loadUserProfile() -> AnyPublisher<UserProfileViewModel?, Never> {
         let defaultProfileModel = UserProfileViewModel(
-            userName: "No name",
-            userDescription: "No city",
-            userAvatar: nil)
+            userName: nil,
+            userDescription: nil,
+            userAvatar: nil,
+            age: nil,
+            licenceNumber: nil,
+            sex: nil
+        )
         
         DispatchQueue.global(qos: .background).async {
             if let data = try? Data(contentsOf: self.userProfileURL) {

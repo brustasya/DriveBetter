@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct SpeedModel {
+struct SpeedModel: Hashable {
     let speed: Int
     let timestamp: Date
     let address: String

@@ -10,6 +10,15 @@ import Foundation
 struct LocationModel: Codable {
     let latitude: Double
     let longitude: Double
-    let speed: Double
-    let timestamp: Date
+    let speed: Int
+    let timestamp: Int
+    let movementAngle: Int
+    
+    enum CodingKeys: String, CodingKey {
+        case latitude = "latitude"
+        case longitude = "longitude"
+        case speed = "speed"
+        case timestamp = "timestamp"
+        case movementAngle = "movement_angle"
+    }
 }

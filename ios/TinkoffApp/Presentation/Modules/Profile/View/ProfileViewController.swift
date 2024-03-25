@@ -26,7 +26,7 @@ class ProfileViewController: UIViewController {
         "backgroundColor": UIColor.systemGray6,
         "secondaryBackgroundColor": UIColor.white,
         "textColor": UIColor.black,
-        "secondaryTextColor": #colorLiteral(red: 0.1298420429, green: 0.1298461258, blue: 0.1298439503, alpha: 1)//UIColor.systemGray
+        "secondaryTextColor": #colorLiteral(red: 0.1298420429, green: 0.1298461258, blue: 0.1298439503, alpha: 1)
     ]
     
     private let darkTheme = [
@@ -66,7 +66,7 @@ class ProfileViewController: UIViewController {
     
     private func setupMedal() {
         let medal = UIImageView(image: UIImage(systemName:  "medal.fill"))
-        medal.tintColor = UIColor(rgb: "#fcdc2c")
+        medal.tintColor = Colors.yellow.uiColor
         view.addSubview(medal)
         medal.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -104,7 +104,6 @@ class ProfileViewController: UIViewController {
             backgroundView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             backgroundView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             backgroundView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
-       //     backgroundView.heightAnchor.constraint(equalToConstant: 402)
         ])
     }
     
@@ -119,7 +118,7 @@ class ProfileViewController: UIViewController {
         editButton.setTitle("Редактировать", for: .normal)
         editButton.setTitleColor(.black, for: .normal)
         editButton.titleLabel?.font = UIFont.systemFont(ofSize: 17, weight: .semibold)
-        editButton.backgroundColor = UIColor(rgb: "#fcdc2c")
+        editButton.backgroundColor = Colors.yellow.uiColor
         editButton.layer.cornerRadius = 14
         
         NSLayoutConstraint.activate([
@@ -128,7 +127,6 @@ class ProfileViewController: UIViewController {
             editButton.trailingAnchor.constraint(equalTo: backgroundView.trailingAnchor, constant: -16),
             editButton.topAnchor.constraint(equalTo: addPhotoButton.bottomAnchor, constant: 24),
             backgroundView.bottomAnchor.constraint(equalTo: editButton.bottomAnchor, constant: 16)
-           // editButton.bottomAnchor.constraint(equalTo: backgroundView.bottomAnchor, constant: -16)
         ])
         
         editButton.addTarget(
@@ -199,7 +197,7 @@ class ProfileViewController: UIViewController {
         ratingLabel.translatesAutoresizingMaskIntoConstraints = false
         
         starView.image = UIImage(systemName: "star.fill")
-        starView.tintColor = UIColor(rgb: "#fcdc2c")
+        starView.tintColor = Colors.yellow.uiColor
         ratingLabel.textColor = .black
         ratingLabel.font = .systemFont(ofSize: 20, weight: .bold)
         ratingLabel.text = "9.0"
@@ -227,7 +225,6 @@ class ProfileViewController: UIViewController {
             descriptionLabel.rightAnchor.constraint(lessThanOrEqualTo: backgroundView.rightAnchor, constant: -16),
             descriptionLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             descriptionLabel.topAnchor.constraint(equalTo: ratingLabel.bottomAnchor, constant: 16),
-           // descriptionLabel.bottomAnchor.constraint(lessThanOrEqualTo: editButton.topAnchor, constant: -24)
         ])
     }
     

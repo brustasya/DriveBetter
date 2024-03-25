@@ -14,16 +14,20 @@ final class ProfileEditingPresenter {
     weak var delegate: ProfileSaveDelegate?
     
     private let profileService: UserProfileDataServiceProtocol
-    private let profileModel: UserProfileViewModel
+    private var profileModel: UserProfileViewModel
     private var isEditing: Bool
+    
+    private let telemetryService: TelemetryServiceProtocol
     
     init(
         profileService: UserProfileDataServiceProtocol,
+        telemetryService: TelemetryServiceProtocol,
         moduleOutput: ProfileEditingModuleOutput,
         profileModel: UserProfileViewModel,
         isPhotoAdded: Bool
     ) {
         self.profileService = profileService
+        self.telemetryService = telemetryService
         self.moduleOutput = moduleOutput
         self.profileModel = profileModel
         self.isEditing = isPhotoAdded
@@ -34,11 +38,29 @@ final class ProfileEditingPresenter {
             if isSaved {
                 self?.viewInput?.showSucsessAlert()
                 self?.delegate?.profileSaved(with: userProfileModel)
+                self?.profileModel = userProfileModel
+                self?.sendProfile()
             } else {
                 self?.viewInput?.showErrorAlert()
             }
             
             self?.viewInput?.changeEnableForSaving(false)
+        }
+    }
+    
+    private func sendProfile() {
+        telemetryService.createProile(with: ServerProfileModel(
+            uuid: UserID.uuid,
+            age: Int(profileModel.age ?? "0") ?? 0,
+            licenceNumber: profileModel.licenceNumber ?? "",
+            sex: profileModel.sex ?? ""
+        )) { result in
+            switch result {
+            case .success(_):
+                print("Send profile success")
+            case .failure(let failure):
+                print(failure)
+            }
         }
     }
 }
@@ -73,6 +95,7 @@ extension ProfileEditingPresenter: ProfileEditingViewOutput {
         if isEditing {
             viewInput?.disableEditing()
             isEditing = false
+            viewInput?.updateProfileData(with: profileModel)
         } else {
             moduleOutput?.moduleWantsToCloseProfileEditing()
         }

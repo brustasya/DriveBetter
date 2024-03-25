@@ -8,18 +8,24 @@
 import CoreLocation
 import CoreMotion
 
-final class LocationService: NSObject {
+final class LocationService: NSObject, LocationServiceProtocol {
     private let locationManager = CLLocationManager()
     private let motionManager = CMMotionActivityManager()
+    private let telemetryService: TelemetryServiceProtocol
     
     private lazy var locationModels: [LocationModel] = []
     
     private var speedsSum = 0.0
     private var speedsCount = 0
+    
+    static let shared: LocationServiceProtocol = ServiceAssembly().makeLocationService()
 
-    override init() {
+    init(
+        telemetryService: TelemetryServiceProtocol
+    ) {
+        self.telemetryService = telemetryService
         super.init()
-
+        
         requestLocationPermission()
         locationManager.delegate = self
         locationManager.activityType = .automotiveNavigation
@@ -37,11 +43,26 @@ final class LocationService: NSObject {
 
     func setActiveMode(_ value: Bool) {
         if value {
-            locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
-            locationManager.distanceFilter = 10
+            locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters
+            locationManager.distanceFilter = 0
+            locationModels = []
         } else {
             locationManager.desiredAccuracy = kCLLocationAccuracyThreeKilometers
             locationManager.distanceFilter = CLLocationDistanceMax
+            telemetryService.sendTripData(with: ServerTripModel(
+                uuid: UserID.uuid,
+                autoStart: true,
+                autoFinish: true,
+                points: locationModels
+            )) { result in
+                switch result {
+                case .success(_):
+                    print("Success trip send")
+                case .failure(let failure):
+                    print(failure)
+                }
+
+            }
         }
     }
     
@@ -60,14 +81,9 @@ final class LocationService: NSObject {
         
     }
     
-    public func configure(desiredAccuracy: CLLocationAccuracy, distanceFilter:  CLLocationDistance) {
-        locationManager.desiredAccuracy = desiredAccuracy
-      //  locationManager.distanceFilter = distanceFilter
-    }
-    
-    public var currentSpeed: ObservableVariable<Double> = ObservableVariable(0.0)
-    public var maxSpeed: ObservableVariable<Double> = ObservableVariable(0.0)
-    public var averageSpeed: ObservableVariable<Double> = ObservableVariable(0.0)
+    var currentSpeed: ObservableVariable<Double> = ObservableVariable(0.0)
+    var maxSpeed: ObservableVariable<Double> = ObservableVariable(0.0)
+    var averageSpeed: ObservableVariable<Double> = ObservableVariable(0.0)
 
 }
 
@@ -95,11 +111,11 @@ extension LocationService: CLLocationManagerDelegate {
             let locationModel = LocationModel(
                 latitude: lastLocation.coordinate.latitude,
                 longitude: lastLocation.coordinate.longitude,
-                speed: lastLocation.speed * 3.6,
-                timestamp: Date.now
+                speed: Int(lastLocation.speed * 3.6),
+                timestamp: Int(Date.now.timeIntervalSince1970),
+                movementAngle: Int(lastLocation.courseAccuracy)
             )
             calculateSpeedMetrics(speed: speed)
-           // print(locationModel)
             locationModels.append(locationModel)
         }
     }

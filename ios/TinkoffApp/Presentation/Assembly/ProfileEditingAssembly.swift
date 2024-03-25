@@ -23,6 +23,7 @@ final class ProfileEditingAssembly {
     ) -> UIViewController {
         let presenter = ProfileEditingPresenter(
             profileService: serviceAssembly.makeProfileService(),
+            telemetryService: serviceAssembly.makeTelemetryService(),
             moduleOutput: moduleOutput,
             profileModel: profileModel,
             isPhotoAdded: isPhotoAdded

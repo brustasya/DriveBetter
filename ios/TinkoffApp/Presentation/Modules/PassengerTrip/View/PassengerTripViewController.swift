@@ -41,6 +41,8 @@ final class PassengerTripViewController: UIViewController {
         
         let swipeDownGesture = UIPanGestureRecognizer(target: self, action: #selector(handleSwipeGesture(_:)))
         view.addGestureRecognizer(swipeDownGesture)
+        
+        output.viewIsReady()
         setupView()
     }
     
@@ -97,7 +99,7 @@ final class PassengerTripViewController: UIViewController {
         
         passengerView.backgroundColor = .white
         passengerView.layer.borderWidth = 5
-        passengerView.layer.borderColor = UIColor(rgb: "#fcdc2c")?.cgColor
+        passengerView.layer.borderColor = Colors.yellow.uiColor.cgColor
         passengerView.layer.cornerRadius = 50
         
         passengerImage.image = UIImage(systemName: "person")
@@ -127,14 +129,6 @@ final class PassengerTripViewController: UIViewController {
         dateLabel.font = .systemFont(ofSize: 20, weight: .semibold)
         timeLabel.font = .systemFont(ofSize: 18, weight: .semibold)
         
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy"
-        dateLabel.text = "г. Москва, " + dateFormatter.string(from: Date())
-        
-        let timeFormatter = DateFormatter()
-        timeFormatter.dateFormat = "dd MMMM HH:mm"
-        timeLabel.text = timeFormatter.string(from: Calendar.current.date(byAdding: .hour, value: -2, to: Date.now) ?? Date()) + " - " + timeFormatter.string(from: Date())
-        
         NSLayoutConstraint.activate([
             dateLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             dateLabel.topAnchor.constraint(equalTo: passengerView.bottomAnchor, constant: 20),
@@ -151,7 +145,7 @@ final class PassengerTripViewController: UIViewController {
         changeRoleButton.setTitle("Сменить роль", for: .normal)
         changeRoleButton.setTitleColor(.black, for: .normal)
         changeRoleButton.titleLabel?.font = UIFont.systemFont(ofSize: 17, weight: .semibold)
-        changeRoleButton.backgroundColor = UIColor(rgb: "#fcdc2c")
+        changeRoleButton.backgroundColor = Colors.yellow.uiColor
         changeRoleButton.layer.cornerRadius = 10
         
         NSLayoutConstraint.activate([
@@ -170,7 +164,24 @@ final class PassengerTripViewController: UIViewController {
     }
     
     @objc private func changeRoleButtonTapped() {
+        showAlert()
+    }
+    
+    private func showAlert() {
+        let alertController = UIAlertController(title: "Смена роли", message: "Хотите сменить роль на Водитель?", preferredStyle: .alert)
         
+        let okAction = UIAlertAction(title: "Сменить", style: .default) { [weak self] (_) in
+            self?.output.changeRoleButtonTapped()
+            self?.output.closeButtonTapped()
+        }
+        
+        let cancelAction = UIAlertAction(title: "Отмена", style: .default) { _ in }
+            
+        
+        alertController.addAction(okAction)
+        alertController.addAction(cancelAction)
+        
+        present(alertController, animated: true, completion: nil)
     }
     
     private func setupBackgroundView() {
@@ -208,7 +219,15 @@ final class PassengerTripViewController: UIViewController {
 }
 
 extension PassengerTripViewController: PassengerTripViewInput {
-    
+    func setupTrip(tripModel: TripModel) {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy"
+        dateLabel.text = "г. Москва, " + dateFormatter.string(from: tripModel.date)
+        
+        let timeFormatter = DateFormatter()
+        timeFormatter.dateFormat = "dd MMMM HH:mm"
+        timeLabel.text = timeFormatter.string(from: tripModel.date) + " - " + timeFormatter.string(from: tripModel.endTimestamp)
+    }
 }
 
 extension PassengerTripViewController: UIViewControllerTransitioningDelegate {

@@ -17,7 +17,10 @@ final class RatingAssembly {
     }
     
     func makeRatingModule(moduleOutput: RatingModuleOutput) -> UIViewController {
-        let presenter = RatingPresenter(moduleOutput: moduleOutput)
+        let presenter = RatingPresenter(
+            moduleOutput: moduleOutput,
+            telemetryService: serviceAssembly.makeTelemetryService()
+        )
         let ratingVC = RatingViewController(output: presenter)
         presenter.viewInput = ratingVC
         

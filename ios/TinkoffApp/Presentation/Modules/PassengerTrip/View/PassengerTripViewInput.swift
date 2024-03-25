@@ -8,5 +8,5 @@
 import Foundation
 
 protocol PassengerTripViewInput: AnyObject {
-    
+    func setupTrip(tripModel: TripModel) 
 }

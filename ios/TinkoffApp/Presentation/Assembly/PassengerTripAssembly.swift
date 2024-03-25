@@ -14,8 +14,12 @@ final class PassengerTripAssembly {
         self.serviceAssembly = serviceAssembly
     }
     
-    func makePassengerTripModule(moduleOutput: PassengerTripModuleOutput) -> UIViewController {
-        let presenter = PassengerTripPresenter(moduleOutput: moduleOutput)
+    func makePassengerTripModule(moduleOutput: PassengerTripModuleOutput, model: TripModel) -> UIViewController {
+        let presenter = PassengerTripPresenter(
+            moduleOutput: moduleOutput,
+            telemetryService: serviceAssembly.makeTelemetryService(),
+            tripModel: model
+        )
         let tripVC = PassengerTripViewController(output: presenter)
         presenter.viewInput = tripVC
         

@@ -9,4 +9,5 @@ import Foundation
 
 protocol RatingViewOutput: AnyObject {
     func closeRating()
+    func viewIsReady()
 }

@@ -9,4 +9,5 @@ import Foundation
 
 protocol MainScreenViewOutput: AnyObject {
     func tripDidSelect(model: TripModel)
+    func viewWillAppear()
 }

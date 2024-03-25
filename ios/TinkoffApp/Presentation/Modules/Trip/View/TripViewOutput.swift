@@ -9,4 +9,6 @@ import Foundation
 
 protocol TripViewOutput: AnyObject {
     func closeButtonTapped()
+    func viewIsReady()
+    func changeRoleButtonTapped()
 }

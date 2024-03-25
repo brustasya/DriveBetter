@@ -101,6 +101,9 @@ extension ProfileEditingViewController: ProfileEditingViewInput {
     func updateProfileData(with profileModel: UserProfileViewModel) {
         nameTextField.text = profileModel.userName ?? ""
         cityTextField.text = profileModel.userDescription ?? ""
+        ageTextField.text = profileModel.age ?? ""
+        sexTextField.text = profileModel.sex ?? ""
+        licenseNumberTextField.text = profileModel.licenceNumber ?? ""
         
         if nameTextField.text == "Нет имени" { nameTextField.text = "" }
         if cityTextField.text == "-" { cityTextField.text = "" }

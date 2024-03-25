@@ -91,21 +91,21 @@ class WeatherCell: UITableViewCell, ConfigurableViewProtocol {
     private func makeWeatherColor(for type: WeatherType) -> UIColor? {
         switch type {
         case .sun:
-            return UIColor(rgb: "#fcdc2c")
+            return Colors.yellow.uiColor
         case .rain:
-            return UIColor(rgb: "#65A6D1")
+            return Colors.lightBlue.uiColor
         case .heavyRain:
-            return UIColor(rgb: "#65A6D1")
+            return Colors.lightBlue.uiColor
         case .hail:
-            return UIColor(rgb: "#65A6D1")
+            return Colors.blue.uiColor
         case .snow:
-            return UIColor(rgb: "#3E97D1")
+            return Colors.blue.uiColor
         case .sleet:
-            return UIColor(rgb: "#3E97D1")
+            return Colors.blue.uiColor
         case .bolt:
-            return UIColor(rgb: "#03426A")
+            return Colors.darkBlue.uiColor
         case .snowstorm:
-            return UIColor(rgb: "#3E97D1")
+            return Colors.blue.uiColor
         case .fog:
             return .systemGray3
         }
@@ -129,4 +129,29 @@ public enum WeatherType {
     case bolt
     case snowstorm
     case fog
+    
+    init?(value: Int) {
+        switch value {
+        case 1...10:
+            self = .sun
+        case 27, 87...89:
+            self = .hail
+        case 36...39:
+            self = .snow
+        case 40...49:
+            self = .fog
+        case 50...67:
+            self = .rain
+        case 68, 69:
+            self = .sleet
+        case 70...79:
+            self = .snow
+        case 80...94:
+            self = .heavyRain
+        case 95...99:
+            self = .bolt
+        default:
+            self = .sun
+        }
+    }
 }
