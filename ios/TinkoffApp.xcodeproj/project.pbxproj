@@ -86,6 +86,8 @@
 		85CFE8912BB0CC9500CA084A /* UserID.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85CFE8902BB0CC9500CA084A /* UserID.swift */; };
 		85CFE8932BB0CFD000CA084A /* LocationServiceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85CFE8922BB0CFD000CA084A /* LocationServiceProtocol.swift */; };
 		85CFE8952BB19E4100CA084A /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85CFE8942BB19E4000CA084A /* Colors.swift */; };
+		85CFE8972BB1F2D600CA084A /* DoubleExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85CFE8962BB1F2D600CA084A /* DoubleExtension.swift */; };
+		85ED3AD52BCACA7700101A5F /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85ED3AD42BCACA7700101A5F /* Logger.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -170,6 +172,8 @@
 		85CFE8902BB0CC9500CA084A /* UserID.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserID.swift; sourceTree = "<group>"; };
 		85CFE8922BB0CFD000CA084A /* LocationServiceProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationServiceProtocol.swift; sourceTree = "<group>"; };
 		85CFE8942BB19E4000CA084A /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
+		85CFE8962BB1F2D600CA084A /* DoubleExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DoubleExtension.swift; sourceTree = "<group>"; };
+		85ED3AD42BCACA7700101A5F /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -197,6 +201,7 @@
 				85051ABF2B7CFBAE00CB875A /* ObservableVariable.swift */,
 				85051B0A2B9F72B600CB875A /* UIColorExtension.swift */,
 				85CFE8942BB19E4000CA084A /* Colors.swift */,
+				85CFE8962BB1F2D600CA084A /* DoubleExtension.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -591,6 +596,7 @@
 		85CFE87F2BADBA7E00CA084A /* Core */ = {
 			isa = PBXGroup;
 			children = (
+				85ED3AD32BCACA5F00101A5F /* Logger */,
 				85CFE8802BADBA9300CA084A /* NetworkService */,
 			);
 			path = Core;
@@ -612,6 +618,14 @@
 				85CFE8902BB0CC9500CA084A /* UserID.swift */,
 			);
 			path = Enums;
+			sourceTree = "<group>";
+		};
+		85ED3AD32BCACA5F00101A5F /* Logger */ = {
+			isa = PBXGroup;
+			children = (
+				85ED3AD42BCACA7700101A5F /* Logger.swift */,
+			);
+			path = Logger;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -738,12 +752,14 @@
 				85051AF92B9F15FA00CB875A /* ProfileEditingViewOutput.swift in Sources */,
 				85CFE8722BAA13BA00CA084A /* RatingModuleOutput.swift in Sources */,
 				85CFE8862BADBB4900CA084A /* NetworkServiceProtocol.swift in Sources */,
+				85ED3AD52BCACA7700101A5F /* Logger.swift in Sources */,
 				85051B022B9F366800CB875A /* ProfileSaveDelegate.swift in Sources */,
 				85CFE86C2BAA137100CA084A /* RatingViewInput.swift in Sources */,
 				85C0ACCA2B751681002ADC9F /* MainScreenAssembly.swift in Sources */,
 				85051B222BA4839200CB875A /* DangerousDrivingModel.swift in Sources */,
 				85051B0B2B9F72B600CB875A /* UIColorExtension.swift in Sources */,
 				85051AD82B9E1ADE00CB875A /* DashboardViewOutput.swift in Sources */,
+				85CFE8972BB1F2D600CA084A /* DoubleExtension.swift in Sources */,
 				85051ABD2B7BBB2300CB875A /* TripModuleOutput.swift in Sources */,
 				85051B142BA1DBC600CB875A /* TripCell.swift in Sources */,
 				855AC9622B321D160046C3DA /* SceneDelegate.swift in Sources */,

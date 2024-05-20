@@ -49,6 +49,7 @@ class SpeedCell: UITableViewCell, ConfigurableViewProtocol {
             
             addressLabel.topAnchor.constraint(equalTo: dateLabel.bottomAnchor, constant: 5),
             addressLabel.leadingAnchor.constraint(equalTo: ratingView.trailingAnchor, constant: 25),
+            addressLabel.trailingAnchor.constraint(lessThanOrEqualTo: contentView.trailingAnchor, constant: -16),
             
             ratingView.heightAnchor.constraint(equalToConstant: 50),
             ratingView.widthAnchor.constraint(equalToConstant: 50),

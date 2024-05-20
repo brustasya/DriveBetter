@@ -200,7 +200,7 @@ class ProfileViewController: UIViewController {
         starView.tintColor = Colors.yellow.uiColor
         ratingLabel.textColor = .black
         ratingLabel.font = .systemFont(ofSize: 20, weight: .bold)
-        ratingLabel.text = "9.0"
+        ratingLabel.text = "8.0"
         
         NSLayoutConstraint.activate([
             starView.centerYAnchor.constraint(equalTo: ratingLabel.centerYAnchor),

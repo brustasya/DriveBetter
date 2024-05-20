@@ -31,6 +31,10 @@ final class LocationService: NSObject, LocationServiceProtocol {
         locationManager.activityType = .automotiveNavigation
         locationManager.pausesLocationUpdatesAutomatically = false
         setActiveMode(true)
+        
+        currentSpeed.updateValue(0)
+        maxSpeed.updateValue(0)
+        averageSpeed.updateValue(0)
 
         motionManager.startActivityUpdates(to: .main, withHandler: { [weak self] activity in
             self?.setActiveMode(activity?.automotive ?? false)
@@ -46,6 +50,9 @@ final class LocationService: NSObject, LocationServiceProtocol {
             locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters
             locationManager.distanceFilter = 0
             locationModels = []
+            currentSpeed.updateValue(0)
+            maxSpeed.updateValue(0)
+            averageSpeed.updateValue(0)
         } else {
             locationManager.desiredAccuracy = kCLLocationAccuracyThreeKilometers
             locationManager.distanceFilter = CLLocationDistanceMax
